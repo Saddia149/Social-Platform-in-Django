@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-0 overflow-hidden">
+  <!-- Chat header -->
+  <div class="bg-indigo-600 text-white p-4">
+    <h2 class="text-lg font-semibold">Messages</h2>
+  </div>
+  
+  <!-- Chat messages -->
+  <div id="chat-window" class="h-96 p-4 space-y-3 overflow-y-auto bg-gray-50">
+    <!-- Messages will appear here -->
+  </div>
+
+  <!-- Message input -->
+  <div class="border-t p-3 bg-white">
+    <div class="flex gap-2">
+      <input id="chat-input" type="text" placeholder="Type your message..." 
+             class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200">
+      <button id="send-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-12 h-12 flex items-center justify-center transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+  const chatWindow = document.getElementById('chat-window');
+  const chatInput = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  // Handle incoming messages
+  chatSocket.onmessage = (e) => {
+    const {sender, message} = JSON.parse(e.data);
+    const msgElement = document.createElement('div');
+    
+    msgElement.innerHTML = `
+      <div class="flex ${sender === 'You' ? 'justify-end' : 'justify-start'}">
+        <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${sender === 'You' ? 'bg-indigo-600 text-white' : 'bg-white border shadow-xs'}">
+          <span class="font-medium">${sender}:</span> ${message}
+        </div>
+      </div>
+    `;
+    
+    chatWindow.appendChild(msgElement);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  };
+
+  // Send message function
+  const sendMessage = () => {
+    const message = chatInput.value.trim();
+    if (message) {
+      chatSocket.send(JSON.stringify({message}));
+      chatInput.value = '';
+    }
+  };
+
+  // Event listeners
+  sendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && sendMessage());
+</script>
+{% endblock %}

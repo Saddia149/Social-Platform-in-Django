@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Chat with {{ other_user.username }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto p-0 bg-white rounded-lg shadow-sm overflow-hidden">
+  <!-- Chat Header -->
+  <div class="bg-indigo-600 text-white p-4 flex items-center">
+    <a href="{% url 'profile' other_user.id %}" class="flex items-center hover:opacity-90">
+      <img src="{{ other_user.profile_pic.url }}" class="w-8 h-8 rounded-full mr-3 border-2 border-white">
+      <h2 class="text-lg font-semibold">{{ other_user.username }}</h2>
+    </a>
+  </div>
+
+  <!-- Messages Container -->
+  <div id="chat-messages" class="h-96 p-4 space-y-3 overflow-y-auto bg-gray-50">
+    {% for msg in messages %}
+    <div class="flex {% if msg.sender == request.user %}justify-end{% else %}justify-start{% endif %}">
+      <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg {% if msg.sender == request.user %}bg-indigo-600 text-white{% else %}bg-white border shadow-xs{% endif %}">
+        <p>{{ msg.content }}</p>
+        <p class="text-xs mt-1 {% if msg.sender == request.user %}text-indigo-200{% else %}text-gray-500{% endif %}">
+          {{ msg.timestamp|naturaltime }}
+        </p>
+      </div>
+    </div>
+    {% empty %}
+    <div class="h-full flex items-center justify-center text-gray-500">
+      <div class="text-center">
+        <p class="mb-2">No messages yet</p>
+        <p>Start the conversation 👋</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Message Form -->
+  <form method="post" action="{% url 'send-message' %}" class="border-t p-4 bg-white">
+    {% csrf_token %}
+    <input type="hidden" name="recipient_id" value="{{ other_user.id }}">
+    <div class="flex gap-2">
+      <textarea name="content" rows="1" placeholder="Type your message..." 
+        class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"></textarea>
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-12 h-12 flex items-center justify-center transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Auto-scroll to bottom of chat
+  const chatMessages = document.getElementById('chat-messages');
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  
+  // Auto-resize textarea
+  const textarea = document.querySelector('textarea');
+  textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
+</script>
+{% endblock %}

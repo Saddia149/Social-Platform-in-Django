@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin Panel{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  <!-- Admin Navbar -->
+  <nav class="bg-indigo-800 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 flex items-center">
+            <i class="fas fa-shield-alt text-2xl mr-3 text-indigo-300"></i>
+            <span class="text-xl font-bold">Admin Dashboard</span>
+          </div>
+        </div>
+        <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+          <a href="{% url 'admin-dashboard' %}" 
+             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center {% if request.path == '/admin/' %}bg-indigo-900{% endif %}">
+            <i class="fas fa-home mr-2"></i> Home
+          </a>
+          <a href="{% url 'admin-users' %}" 
+             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center {% if 'users' in request.path %}bg-indigo-900{% endif %}">
+            <i class="fas fa-users mr-2"></i> Users
+          </a>
+          <a href="{% url 'admin-posts' %}" 
+             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center {% if 'posts' in request.path %}bg-indigo-900{% endif %}">
+            <i class="fas fa-newspaper mr-2"></i> Posts
+          </a>
+          <a href="{% url 'admin-reports' %}" 
+             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center {% if 'reports' in request.path %}bg-indigo-900{% endif %}">
+            <i class="fas fa-flag mr-2"></i> Reports
+          </a>
+          <a href="{% url 'admin-logout' %}" 
+             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition-colors flex items-center">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile menu button (hidden on desktop) -->
+  <div class="md:hidden bg-indigo-800 px-4 py-3 flex justify-between items-center">
+    <button id="mobile-menu-button" class="text-white focus:outline-none">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+    <a href="{% url 'admin-logout' %}" class="text-white">
+      <i class="fas fa-sign-out-alt"></i>
+    </a>
+  </div>
+
+  <!-- Mobile menu (hidden by default) -->
+  <div id="mobile-menu" class="hidden md:hidden bg-indigo-700 pb-3">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="{% url 'admin-dashboard' %}" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-600">
+        <i class="fas fa-home mr-2"></i> Home
+      </a>
+      <a href="{% url 'admin-users' %}" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-600">
+        <i class="fas fa-users mr-2"></i> Users
+      </a>
+      <a href="{% url 'admin-posts' %}" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-600">
+        <i class="fas fa-newspaper mr-2"></i> Posts
+      </a>
+      <a href="{% url 'admin-reports' %}" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-600">
+        <i class="fas fa-flag mr-2"></i> Reports
+      </a>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+  </script>
+</body>
+</html>

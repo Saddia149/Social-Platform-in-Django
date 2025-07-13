@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto py-8 space-y-6">
+  <h2 class="text-2xl font-bold text-indigo-700">📥 Your Conversations</h2>
+
+  {% if users %}
+    <ul class="space-y-4">
+      {% for person in users %}
+        <li class="bg-white p-4 rounded shadow">
+          <a href="{% url 'conversation' person.id %}" class="text-blue-600 hover:underline text-lg font-semibold">
+            {{ person.username }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-center text-gray-500">No messages yet — inbox is chill 🌿</p>
+  {% endif %}
+</div>
+{% endblock %}

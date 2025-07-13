@@ -1,0 +1,33 @@
+{% extends 'adminboard/base_admin.html' %}
+{% load humanize %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8">
+  <h2 class="text-2xl font-bold text-indigo-700 mb-4">👤 Manage Users</h2>
+
+  <table class="w-full text-sm border-collapse">
+    <thead>
+      <tr class="bg-indigo-100 text-left">
+        <th class="p-2">Username</th>
+        <th class="p-2">Email</th>
+        <th class="p-2">Date Joined</th>
+        <th class="p-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr class="border-b">
+        <td class="p-2 font-medium">{{ user.username }}</td>
+        <td class="p-2">{{ user.email }}</td>
+        <td class="p-2">{{ user.date_joined|naturaltime }}</td>
+        <td class="p-2">
+          <a href="{% url 'profile' user.id %}" class="text-blue-600 hover:underline">View</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

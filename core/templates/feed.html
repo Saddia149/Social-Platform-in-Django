@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Feed | SocialSphere{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6 pb-10">
+  {% for post in posts %}
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition">
+    <!-- Post Header -->
+    <div class="p-4 flex items-center justify-between border-b">
+      <a href="{% url 'user-profile' post.user.username %}" class="flex items-center space-x-3 group">
+        <img src="{{ post.user.profile_pic.url }}" 
+             class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+             alt="{{ post.user.username }}'s profile picture">
+        <div>
+          <h3 class="font-medium text-gray-900 group-hover:text-indigo-600 transition">{{ post.user.username }}</h3>
+          <p class="text-xs text-gray-500">{{ post.created_at|naturaltime }}</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Post Content -->
+    <div class="p-4">
+      <p class="text-gray-700 mb-3 whitespace-pre-line">{{ post.content }}</p>
+      {% if post.image %}
+      <div class="rounded-lg overflow-hidden my-3">
+        <img src="{{ post.image.url }}" 
+             class="w-full h-auto max-h-96 object-cover hover:scale-[1.01] transition-transform duration-300"
+             loading="lazy"
+             alt="Post image">
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Post Actions -->
+    <div class="px-4 py-3 border-t flex items-center justify-between text-sm text-gray-500">
+      <div class="flex items-center space-x-4">
+        <form method="post" action="{% url 'like-post' %}">
+          {% csrf_token %}
+          <input type="hidden" name="post_id" value="{{ post.id }}">
+          <button type="submit" class="flex items-center space-x-1 group">
+            <svg class="w-5 h-5 {% if request.user in post.likes.all %}text-red-500 fill-current{% else %}text-gray-400 group-hover:text-red-500{% endif %}" 
+                 viewBox="0 0 24 24" stroke="{% if request.user not in post.likes.all %}currentColor{% endif %}">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{% if request.user not in post.likes.all %}2{% else %}0{% endif %}" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span>{{ post.likes.count }}</span>
+          </button>
+        </form>
+        
+        <a href="{% url 'post-detail' post.id %}" class="flex items-center space-x-1 hover:text-indigo-600">
+          <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span>{{ post.comments.count }}</span>
+        </a>
+      </div>
+      <a href="{% url 'post-detail' post.id %}" class="text-sm text-indigo-600 hover:text-indigo-800">View post</a>
+    </div>
+  </div>
+  {% empty %}
+  <div class="text-center py-16">
+    <div class="mx-auto h-24 w-24 text-gray-300 mb-4">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900">Your feed is empty</h3>
+    <p class="mt-1 text-gray-500 mb-6">Follow users or create your first post!</p>
+    <a href="{% url 'explore' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Explore Users
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
