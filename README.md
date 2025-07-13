@@ -110,9 +110,20 @@ This project is more than a basic app — it's a **scalable social framework** t
 
 ## 📸 More Screenshots
 
-| Explore Page | Feed Page | Notifications | Search |
-|--------------|-----------|---------------|--------|
-| ![Explore](ScreenShots/explore_page.png) | ![Feed](ScreenShots/feed_page.png) | ![Notifications](ScreenShots/notifications_page.png) | ![Search](ScreenShots/search_page.png) |
+<table>
+  <tr>
+    <td><strong>Explore Page</strong></td>
+    <td><strong>Feed Page</strong></td>
+    <td><strong>Notifications</strong></td>
+    <td><strong>Search</strong></td>
+  </tr>
+  <tr>
+    <td><img src="ScreenShots/explore_page.png" width="200"/></td>
+    <td><img src="ScreenShots/feed_page.png" width="200"/></td>
+    <td><img src="ScreenShots/notifications_page.png" width="200"/></td>
+    <td><img src="ScreenShots/search_page.png" width="200"/></td>
+  </tr>
+</table>
 
 ---
 
