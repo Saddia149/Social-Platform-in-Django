@@ -116,23 +116,11 @@ This project is more than a basic app — it's a **scalable social framework** t
 
 ---
 
-## 🧪 Future Improvements
-- Nested comment threads
-- Real-time notifications via Channels
-- Profile bio links
-- Profile cover photo
-- Theme toggle (dark/light)
-
----
-
 ## 📦 Installation (for local setup)
 
 ```bash
 git clone https://github.com/Saddia149/Social-Platform-in-Django.git
 cd Social-Platform-in-Django
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 
